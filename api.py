@@ -29,7 +29,7 @@ def get_all_incidents_by_service(service_id):
     try:
         incidents_by_service_id = PagerDutyAPISession.rget(
             f"/incidents",
-            params={"service_ids[]": ["P8A9YNH"]}
+            params={"service_ids[]": [service_id]}
         )
 
         return incidents_by_service_id
