@@ -49,34 +49,12 @@ def get_all_status_per_incident(incident_id):
         print(e.msg)
         return e.response.text
 
-def creat_incident(): 
+def creat_incident(payload): 
     try:  
         incident = PagerDutyAPISession.rpost(
                 f"/incidents",
-                json={
-                    "incident": {
-                        "type": "incident",
-                        "title": "The server is on fire.",
-                        "service": {
-                            "id": "PWIXJZS",
-                            "type": "service_reference"
-                        },
-                        "priority": {
-                            "id": "P53ZZH5",
-                            "type": "priority_reference"
-                        },
-                        "urgency": "high",
-                        "incident_key": "baf7cf21b1da41b4b0221008339ff357",
-                        "body": {
-                            "type": "incident_body",
-                            "details": "A disk is getting full on this machine. You should investigate what is causing the disk to fill, and ensure that there is an automated process in place for ensuring data is rotated (eg. logs should have logrotate around them). If data is expected to stay on this disk forever, you should start planning to scale up to a larger disk."
-                        },
-                        "escalation_policy": {
-                            "id": "PT20YPA",
-                            "type": "escalation_policy_reference"
-                        }
-                    }
-                }
+                headers={"From": payload['from']},
+                json=payload['form']
             )
         return incident
     
