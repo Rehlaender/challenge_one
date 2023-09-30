@@ -27,6 +27,15 @@ def create_app(test_config=None):
         else:
             return 'Content-Type not supported!'
         
+    @app.route('/update-incident-status', methods=['PUT'])
+    def update_incident_status():
+        content_type = request.headers.get('Content-Type')
+        if (content_type == 'application/json'):
+            payload = request.json
+            print(payload)
+            return api.update_incident(payload)
+        else:
+            return 'Content-Type not supported!'
     return app
 
 if __name__ == '__main__':

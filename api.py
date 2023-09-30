@@ -61,3 +61,16 @@ def creat_incident(payload):
     except PDClientError as e:
         print(e.msg)
         return e.response.text
+    
+def update_incident(payload): 
+    try:  
+        incident = PagerDutyAPISession.rput(
+                f"/incidents/{payload['id']}",
+                headers={"From": payload['from']},
+                json=payload['form']
+            )
+        return incident
+    
+    except PDClientError as e:
+        print(e.msg)
+        return e.response.text
