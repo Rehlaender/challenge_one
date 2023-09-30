@@ -1,26 +1,25 @@
-from flask import Flask
+from flask import Flask, request
 
-app = Flask(__name__)
+def create_app(test_config=None):
+    app = Flask(__name__, instance_relative_config=True)
 
-@app.route('/products', methods=['POST'])
-def create_product():
-    # Handle product creation logic
-    return "Product created successfully"
+    @app.route('/services', methods=['GET'])
+    def get_services():
+        import api
+        return api.get_all_services()
+    
+    @app.route('/incidents-by-service', methods=['GET'])
+    def get_incidents():
+        import api
+        return api.get_all_incidents_by_service(2)
 
-@app.route('/products/<product_id>', methods=['GET'])
-def get_product(product_id):
-    # Handle product retrieval logic
-    return f"Product ID: {product_id}"
-
-@app.route('/products/<product_id>', methods=['PUT'])
-def update_product(product_id):
-    # Handle product update logic
-    return f"Product ID: {product_id} updated successfully"
-
-@app.route('/products/<product_id>', methods=['DELETE'])
-def delete_product(product_id):
-    # Handle product deletion logic
-    return f"Product ID: {product_id} deleted successfully"
+    @app.route('/status-of-incident/<incident_id>', methods=['GET'])
+    def get_all_status_per_incident(incident_id):
+        print(incident_id)
+        import api
+        return api.get_all_status_per_incident(incident_id)
+    return app
 
 if __name__ == '__main__':
-    app.run()
+    app = create_app()
+    app.run(debug=True)
