@@ -79,21 +79,34 @@ def update_incident(payload):
 # (total incidents by status, percentage of incidents by status)
 def get_service_incident_status(service_id):
     try: 
-        incidents = PagerDutyAPISession.rget(
-            f"/incidents",
-            params={"service_ids[]": [service_id]}
-        )
+        incidents = get_all_incidents_by_service(service_id)
         
         awesomeDashboard = {
             'resolved': [],
             'acknowledged': [],
-            'triggered': []
+            'triggered': [],
         }
+        
+        incidentsByStatus = dict()
+        incidentsByPercentage = dict()
+        totalIncidents = len(incidents)
+
         # Iterate over all the incidents and separate by status
         for incident in incidents:
             print({'status': incident['status'], 'id': incident['id']})
             awesomeDashboard[incident['status']].append(incident)
-        return awesomeDashboard
+        
+        # Iterate Dashboard and count percentage and total
+        for key, status in awesomeDashboard.items(): 
+            print(key, totalIncidents, len(status), 'jijiji')
+            incidentsByPercentage[key] = (len(status) / totalIncidents) * 100
+            incidentsByStatus[key] = len(status)
+        return {
+            "dashboard": awesomeDashboard, 
+            "incidentByStatus": incidentsByStatus,
+            "percentages": incidentsByPercentage,
+            "totalIncidents": totalIncidents
+        }
 
     except PDClientError as e:
         print(e.msg)
