@@ -1,8 +1,11 @@
 from flask import Flask, request
+from flask_cors import CORS, cross_origin
 import api
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
+    cors = CORS(app)
+    app.config['CORS_HEADERS'] = 'Content-Type'
 
     @app.route('/services', methods=['GET'])
     def get_services():
