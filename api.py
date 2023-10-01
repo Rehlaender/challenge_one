@@ -74,3 +74,27 @@ def update_incident(payload):
     except PDClientError as e:
         print(e.msg)
         return e.response.text
+    
+# Get a status of all incidents associated with a service 
+# (total incidents by status, percentage of incidents by status)
+def get_service_incident_status(service_id):
+    try: 
+        incidents = PagerDutyAPISession.rget(
+            f"/incidents",
+            params={"service_ids[]": [service_id]}
+        )
+        
+        awesomeDashboard = {
+            'resolved': [],
+            'acknowledged': [],
+            'triggered': []
+        }
+        # Iterate over all the incidents and separate by status
+        for incident in incidents:
+            print({'status': incident['status'], 'id': incident['id']})
+            awesomeDashboard[incident['status']].append(incident)
+        return awesomeDashboard
+
+    except PDClientError as e:
+        print(e.msg)
+        return e.response.text

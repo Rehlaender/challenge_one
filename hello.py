@@ -36,6 +36,12 @@ def create_app(test_config=None):
             return api.update_incident(payload)
         else:
             return 'Content-Type not supported!'
+        
+    @app.route('/awesome-dashboard/<service_id>', methods=['GET'])
+    def incident_status_by_service(service_id):
+        print(service_id)
+        return api.get_service_incident_status(service_id)
+        
     return app
 
 if __name__ == '__main__':
